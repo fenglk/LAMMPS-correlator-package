@@ -1,1 +1,2 @@
 
+This is a package for LAMMPS to calculate correlators(e.g. mean squared displacement, orientation correlation) on the fly of the molecular dynamics in equilibrium. However, this package severely effects the efficiency of LAMMPS.
