@@ -1,0 +1,31 @@
+LAMMPS加包方法：
+将文件flklmp及文件夹USER-FLK放在lammps-version/src目录下
+执行命令：. flklmp
+
+调用：在LAMMPS的in文件中添加以下命令：
+dump ID all ocf N RunStep nlen 16 ncount 2 ncorr 32 nChain11 200 chainLen11 10 nChain22 0 chainLen22 0 MID 10 # file flktest 
+dump_modify ID precision 1000000 unwrap yes
+说明：参考LAMMPS手册中“dump command”命令
+1、ID = user-assigned name for the dump。
+2、all=  ID of the group of atoms to be dumped，group中的粒子数需与“nChain11 200 chainLen11 10 nChain22 0 chainLen22 0”部分粒子数一致。
+3、ocf=命令名，不能改。
+4、N= dump every this many timesteps，N=1时表示每步一算，一般设为1。
+5、RunStep=in文件中run的步数。
+6、nlen 16 ncount 2 ncorr 32=MultiTau算法中的参数，可不改；可见“fix ave/correlate/long”命令。
+7、nChain11 200 chainLen11 10 nChain22 0 chainLen22 0=可计算单组分、双组分体系；nChain为链数，chainLen为链长；单组分时，22部分设为0。
+8、MID=在计算体系MSD-g1时，只计算链中间MID个粒子。
+9、dump_modify中“unwrap yes”部分为必须，“precision 1000000”部分可选。
+
+
+
+#####################################
+轨迹文件后处理程序：OCF1
+进入OCF1文件夹后，修改”parameters.h“中以下三个参数：
+#define dump 1 ///轨迹文件每几步一存
+#define run 100000 ///run步数
+#define timestep  0.01 
+
+在OCF1文件夹中执行命名：make 
+运行可执行程序：./a.out nChain11 chainLen11 nChain22 chainLen22 path
+1、nChain11 chainLen11 nChain22 chainLen22=可计算单组分、双组分体系；nChain为链数，chainLen为链长；单组分时，22部分设为0。
+2、path=轨迹文件路径
